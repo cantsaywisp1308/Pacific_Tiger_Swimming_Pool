@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PacificTigerSwimmingPoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Entry">
+    <Key>
+      <PropertyRef Name="Number" />
+    </Key>
+    <Property Name="Number" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberID" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="checkIn" Type="DateTime" Precision="3" />
+    <Property Name="MembershipType" Type="Int32" />
+    <NavigationProperty Name="Member" Relationship="Self.FK_Entry_Member" FromRole="Entry" ToRole="Member" />
+    <NavigationProperty Name="Membership" Relationship="Self.FK_Entry_Membership" FromRole="Entry" ToRole="Membership" />
+  </EntityType>
+  <EntityType Name="Mail">
+    <Key>
+      <PropertyRef Name="MailNumber" />
+    </Key>
+    <Property Name="MailNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MailTo" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="MailBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="MemberID" />
+    </Key>
+    <Property Name="MemberID" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="DateOfBirth" Type="DateTime" Precision="0" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="NumberOfEntries" Type="Int32" />
+    <Property Name="MembershipType" Type="Int32" />
+    <Property Name="ExpiredDate" Type="DateTime" Precision="0" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Entries" Relationship="Self.FK_Entry_Member" FromRole="Member" ToRole="Entry" />
+    <NavigationProperty Name="Membership" Relationship="Self.FK_Member_Membership" FromRole="Member" ToRole="Membership" />
+    <NavigationProperty Name="Renewals" Relationship="Self.FK_Renewals_Member" FromRole="Member" ToRole="Renewals" />
+  </EntityType>
+  <EntityType Name="Membership">
+    <Key>
+      <PropertyRef Name="MembershipType" />
+    </Key>
+    <Property Name="MembershipType" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MembershipName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Price" Type="Int32" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Entries" Relationship="Self.FK_Entry_Membership" FromRole="Membership" ToRole="Entry" />
+    <NavigationProperty Name="Members" Relationship="Self.FK_Member_Membership" FromRole="Membership" ToRole="Member" />
+    <NavigationProperty Name="Renewals" Relationship="Self.FK_Renewals_Membership" FromRole="Membership" ToRole="Renewals" />
+  </EntityType>
+  <EntityType Name="Renewal">
+    <Key>
+      <PropertyRef Name="RenewalNumber" />
+    </Key>
+    <Property Name="RenewalNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberID" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="MembershipType" Type="Int32" />
+    <Property Name="Price" Type="Int32" />
+    <Property Name="DateOfRenewal" Type="DateTime" Precision="0" />
+    <Property Name="DateOfExpiration" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="Member" Relationship="Self.FK_Renewals_Member" FromRole="Renewals" ToRole="Member" />
+    <NavigationProperty Name="Membership" Relationship="Self.FK_Renewals_Membership" FromRole="Renewals" ToRole="Membership" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Entry_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Entry" Type="Self.Entry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Entry">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Entry_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Entry" Type="Self.Entry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Entry">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Member_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Member" Type="Self.Member" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Member">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Renewals_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Renewals" Type="Self.Renewal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Renewals">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Renewals_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Renewals" Type="Self.Renewal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Renewals">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Entries" EntityType="Self.Entry" />
+    <EntitySet Name="Mails" EntityType="Self.Mail" />
+    <EntitySet Name="Members" EntityType="Self.Member" />
+    <EntitySet Name="Memberships" EntityType="Self.Membership" />
+    <EntitySet Name="Renewals" EntityType="Self.Renewal" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_Entry_Member" Association="Self.FK_Entry_Member">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="Entry" EntitySet="Entries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Entry_Membership" Association="Self.FK_Entry_Membership">
+      <End Role="Membership" EntitySet="Memberships" />
+      <End Role="Entry" EntitySet="Entries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Member_Membership" Association="Self.FK_Member_Membership">
+      <End Role="Membership" EntitySet="Memberships" />
+      <End Role="Member" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Renewals_Member" Association="Self.FK_Renewals_Member">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="Renewals" EntitySet="Renewals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Renewals_Membership" Association="Self.FK_Renewals_Membership">
+      <End Role="Membership" EntitySet="Memberships" />
+      <End Role="Renewals" EntitySet="Renewals" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

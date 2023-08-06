@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PacificTigerSwimmingPoolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'PacificTigerSwimmingPool.dbo.Data' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="Data">
+          <Property Name="LastSemesterDate" Type="date" />
+        </EntityType>-->
+  <EntityType Name="Entry">
+    <Key>
+      <PropertyRef Name="Number" />
+    </Key>
+    <Property Name="Number" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MemberID" Type="varchar" MaxLength="250" />
+    <Property Name="checkIn" Type="datetime" />
+    <Property Name="MembershipType" Type="int" />
+  </EntityType>
+  <EntityType Name="Mail">
+    <Key>
+      <PropertyRef Name="MailNumber" />
+    </Key>
+    <Property Name="MailNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MailTo" Type="varchar" MaxLength="250" />
+    <Property Name="Subject" Type="text" />
+    <Property Name="MailBody" Type="text" />
+    <Property Name="Status" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="MemberID" />
+    </Key>
+    <Property Name="MemberID" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="250" />
+    <Property Name="MiddleName" Type="varchar" MaxLength="250" />
+    <Property Name="LastName" Type="varchar" MaxLength="250" />
+    <Property Name="InitialDate" Type="date" />
+    <Property Name="Phone" Type="varchar" MaxLength="50" />
+    <Property Name="Email" Type="varchar" MaxLength="250" />
+    <Property Name="NumberOfEntries" Type="int" />
+    <Property Name="MembershipType" Type="int" />
+    <Property Name="ExpiredDate" Type="date" />
+    <Property Name="Notes" Type="text" />
+    <Property Name="FullName" Type="varchar" MaxLength="250" />
+    <Property Name="Password" Type="varchar" MaxLength="250" />
+    <Property Name="Status" Type="bit" />
+  </EntityType>
+  <EntityType Name="Membership">
+    <Key>
+      <PropertyRef Name="MembershipType" />
+    </Key>
+    <Property Name="MembershipType" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MembershipName" Type="varchar" MaxLength="250" />
+    <Property Name="Price" Type="int" />
+    <Property Name="Notes" Type="text" />
+  </EntityType>
+  <EntityType Name="Renewals">
+    <Key>
+      <PropertyRef Name="RenewalNumber" />
+    </Key>
+    <Property Name="RenewalNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MemberID" Type="varchar" MaxLength="250" />
+    <Property Name="MembershipType" Type="int" />
+    <Property Name="Price" Type="int" />
+    <Property Name="DateOfRenewal" Type="date" />
+    <Property Name="DateOfExpiration" Type="date" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_Entry_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Entry" Type="Self.Entry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Entry">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Entry_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Entry" Type="Self.Entry" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Entry">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Member_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Member" Type="Self.Member" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Member">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Renewals_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Renewals" Type="Self.Renewals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="Renewals">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Renewals_Membership">
+    <End Role="Membership" Type="Self.Membership" Multiplicity="0..1" />
+    <End Role="Renewals" Type="Self.Renewals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Membership">
+        <PropertyRef Name="MembershipType" />
+      </Principal>
+      <Dependent Role="Renewals">
+        <PropertyRef Name="MembershipType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="PacificTigerSwimmingPoolModelStoreContainer">
+    <EntitySet Name="Entry" EntityType="Self.Entry" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Mail" EntityType="Self.Mail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Membership" EntityType="Self.Membership" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Renewals" EntityType="Self.Renewals" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Entry_Member" Association="Self.FK_Entry_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="Entry" EntitySet="Entry" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Entry_Membership" Association="Self.FK_Entry_Membership">
+      <End Role="Membership" EntitySet="Membership" />
+      <End Role="Entry" EntitySet="Entry" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Member_Membership" Association="Self.FK_Member_Membership">
+      <End Role="Membership" EntitySet="Membership" />
+      <End Role="Member" EntitySet="Member" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Renewals_Member" Association="Self.FK_Renewals_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="Renewals" EntitySet="Renewals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Renewals_Membership" Association="Self.FK_Renewals_Membership">
+      <End Role="Membership" EntitySet="Membership" />
+      <End Role="Renewals" EntitySet="Renewals" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
